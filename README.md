@@ -1,3 +1,3 @@
 ### contract framework
 
-![image](https://github.com/clinkcash/nft-lending/blob/master/images/image.png)
+![image](https://github.com/clinkcash/nft-lending/blob/main/images/image.png)
