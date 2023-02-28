@@ -11,7 +11,7 @@ import "@openzeppelin/contracts/utils/Multicall.sol";
 import "./interfaces/IPriceHelper.sol";
 import "./interfaces/IInitialization.sol";
 import "./interfaces/IUniV3Swapper.sol";
-import "../clink/IERC20BurnMintable.sol";
+import "../clink/interfaces/IERC20BurnMintable.sol";
 
 /// @title NFT lending vault
 /// @notice This contracts allows users to borrow CLK using NFTs as collateral.
@@ -303,7 +303,7 @@ contract NFTVault is Ownable, ReentrancyGuard, IInitialization, Multicall {
     /// @notice Allows users to open positions and borrow using an NFT
     /// @dev emits a {Borrowed} event
     /// @param _tokenId The index of the NFT to be used as collateral
-    /// @param _amount The amount of PUSD to be borrowed. Note that the user will receive less than the amount requested,
+    /// @param _amount The amount of USD to be borrowed. Note that the user will receive less than the amount requested,
     /// the borrow fee automatically get removed from the amount borrowed
     function borrow(uint256 _tokenId, uint256 _amount) external validNFTIndex(_tokenId) nonReentrant {
         accrue();
@@ -352,7 +352,8 @@ contract NFTVault is Ownable, ReentrancyGuard, IInitialization, Multicall {
             _openPosition(msg.sender, _tokenId);
         }
 
-        IERC20BurnMintable(clink).mint(msg.sender, _amount - feeAmount);
+        IERC20BurnMintable(clink).mint(address(this), _amount);
+        IERC20(clink).safeTransfer(msg.sender, _amount - feeAmount);
 
         emit Borrowed(msg.sender, _tokenId, _amount);
     }

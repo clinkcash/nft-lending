@@ -23,7 +23,7 @@ contract Factory {
         bytes calldata data,
         bool useCreate2
     ) public payable returns (address cloneAddress) {
-        require(masterContract != address(0), "BoringFactory: No masterContract");
+        require(masterContract != address(0), "Factory: No masterContract");
         if (useCreate2) {
             // each masterContract has different code already. So clones are distinguished by their data only.
             bytes32 salt = keccak256(data);
